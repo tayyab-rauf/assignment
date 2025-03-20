@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Output } from '@angular/core';
+import { AuthService } from '../../services/auth.service';
 
 
 @Component({
@@ -10,13 +11,13 @@ import { Component, EventEmitter, Output } from '@angular/core';
 export class HeaderComponent {
   @Output() menuToggle = new EventEmitter<void>();
 
-  // constructor(private authService: AuthService) {}
+  constructor(private authService: AuthService) {}
 
   onMenuToggleClick(): void {
     this.menuToggle.emit();
   }
 
-  // onLogout(): void {
-  //   this.authService.logout();
-  // }
+  onLogout(): void {
+    this.authService.logout();
+  }
 }
