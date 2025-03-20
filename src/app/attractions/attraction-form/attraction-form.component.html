@@ -1,0 +1,58 @@
+<h2 mat-dialog-title>{{ isEditMode ? 'Edit Attraction' : 'Add New Attraction' }}</h2>
+
+<form [formGroup]="attractionForm" (ngSubmit)="onSubmit()">
+  <mat-dialog-content>
+    <div class="form-container">
+      <mat-form-field appearance="outline">
+        <mat-label>Name</mat-label>
+        <input matInput formControlName="name">
+        <mat-error *ngIf="attractionForm.get('name')?.hasError('required')">
+          Name is required
+        </mat-error>
+      </mat-form-field>
+      
+      <mat-form-field appearance="outline">
+        <mat-label>Detail</mat-label>
+        <textarea matInput formControlName="detail" rows="4"></textarea>
+        <mat-error *ngIf="attractionForm.get('detail')?.hasError('required')">
+          Detail is required
+        </mat-error>
+      </mat-form-field>
+      
+      <mat-form-field appearance="outline">
+        <mat-label>Cover Image URL</mat-label>
+        <input matInput formControlName="coverimage">
+      </mat-form-field>
+      
+      <div class="location-fields">
+        <mat-form-field appearance="outline">
+          <mat-label>Latitude</mat-label>
+          <input matInput formControlName="latitude" type="number">
+          <mat-error *ngIf="attractionForm.get('latitude')?.hasError('required')">
+            Latitude is required
+          </mat-error>
+        </mat-form-field>
+        
+        <mat-form-field appearance="outline">
+          <mat-label>Longitude</mat-label>
+          <input matInput formControlName="longitude" type="number">
+          <mat-error *ngIf="attractionForm.get('longitude')?.hasError('required')">
+            Longitude is required
+          </mat-error>
+        </mat-form-field>
+      </div>
+      
+      <div *ngIf="errorMessage" class="error-message">
+        {{ errorMessage }}
+      </div>
+    </div>
+  </mat-dialog-content>
+  
+  <mat-dialog-actions align="end">
+    <button mat-button type="button" [disabled]="isSubmitting" (click)="onCancel()">Cancel</button>
+    <button mat-raised-button color="primary" type="submit" [disabled]="attractionForm.invalid || isSubmitting">
+      <mat-spinner *ngIf="isSubmitting" diameter="20"></mat-spinner>
+      <span *ngIf="!isSubmitting">{{ isEditMode ? 'Update' : 'Save' }}</span>
+    </button>
+  </mat-dialog-actions>
+</form>

@@ -1,0 +1,49 @@
+<div class="pet-sales-container">
+    <h2>Pet Sales Statistics</h2>
+    <mat-form-field appearance="outline">
+        <input matInput [matDatepicker]="picker" [(ngModel)]="selectedDate" (dateChange)="onDateChange($event.value)">
+        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+      </mat-form-field>
+    <!-- Weekly Sales Chart -->
+    <div class="chart-container">
+      <h3>Weekly Sales Trend</h3>
+      <canvas baseChart
+              [data]="lineChartData"
+              [options]="lineChartOptions"
+              [type]="lineChartType">
+      </canvas>
+    </div>
+  
+    <!-- Daily Sales Table -->
+    <div class="daily-sales-container">
+      <h3>Daily Sales Details</h3>
+  
+      <mat-table [dataSource]="dailySalesData">
+        <!-- Date Column -->
+        <ng-container matColumnDef="date">
+          <mat-header-cell *matHeaderCellDef> Date </mat-header-cell>
+          <mat-cell *matCellDef="let sale"> {{ sale.date }} </mat-cell>
+        </ng-container>
+
+         <!-- Animal Column -->
+         <ng-container matColumnDef="animal">
+            <mat-header-cell *matHeaderCellDef> Animal </mat-header-cell>
+            <mat-cell *matCellDef="let sale"> {{ sale.animal }} </mat-cell>
+          </ng-container>
+  
+        <!-- Amount Column -->
+        <ng-container matColumnDef="amount">
+          <mat-header-cell *matHeaderCellDef> Amount </mat-header-cell>
+          <mat-cell *matCellDef="let sale"> {{ sale.price | currency }} </mat-cell>
+        </ng-container>
+  
+        <!-- Header and Row Definitions -->
+        <mat-header-row *matHeaderRowDef="['date','animal', 'amount']"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: ['date', 'animal', 'amount'];"></mat-row>
+      </mat-table>
+    </div>
+  
+    <!-- Loading Spinner -->
+    <mat-spinner *ngIf="isLoading" diameter="30"></mat-spinner>
+  </div>

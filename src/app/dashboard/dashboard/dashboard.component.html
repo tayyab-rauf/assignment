@@ -1,0 +1,21 @@
+<div class="dashboard-container">
+    <h1 class="dashboard-title">Admin Dashboard</h1>
+    
+    <p class="dashboard-subtitle">
+      Welcome to the Admin Dashboard. From here, you can manage users and attractions, as well as view pet sales statistics.
+    </p>
+    
+    <mat-grid-list [cols]="cols" rowHeight="200px" gutterSize="16px">
+      <mat-grid-tile *ngFor="let tile of dashboardTiles">
+        <mat-card class="dashboard-card" (click)="navigateTo(tile.route)" [style.borderColor]="tile.color">
+          <mat-card-header>
+            <div mat-card-avatar class="dashboard-card-avatar" [style.backgroundColor]="tile.color">
+              <mat-icon>{{ tile.icon }}</mat-icon>
+            </div>
+            <mat-card-title>{{ tile.title }}</mat-card-title>
+            <mat-card-subtitle>{{ tile.subtitle }}</mat-card-subtitle>
+          </mat-card-header>
+        </mat-card>
+      </mat-grid-tile>
+    </mat-grid-list>
+  </div>
