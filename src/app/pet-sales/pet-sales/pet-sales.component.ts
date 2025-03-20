@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { PetSalesService } from '../../services/pet-sales.service';
-import { ChartConfiguration, ChartType, ChartData } from 'chart.js';
+import { ChartConfiguration, ChartType, ChartData, Chart } from 'chart.js';
 
 @Component({
   selector: 'app-pet-sales',
@@ -8,11 +8,12 @@ import { ChartConfiguration, ChartType, ChartData } from 'chart.js';
   templateUrl: './pet-sales.component.html',
   styleUrls: ['./pet-sales.component.scss']
 })
-export class PetSalesComponent implements OnInit {
+export class PetSalesComponent implements OnInit, AfterViewInit {
   weeklySalesData: any; // Raw data from the API
   dailySalesData: any[] = []; // Daily sales data
   selectedDate: string = new Date().toISOString().split('T')[0]; // Default to today's date
   isLoading: boolean = false;
+  private chart: any;
 
   // Chart.js Configuration
   public lineChartOptions: ChartConfiguration['options'] = {
@@ -42,16 +43,26 @@ export class PetSalesComponent implements OnInit {
   constructor(private petSalesService: PetSalesService) {}
 
   ngOnInit(): void {
+
+  }
+
+  ngAfterViewInit(): void {
     this.loadWeeklySales(this.selectedDate);
     this.loadDailySales(this.selectedDate);
+  }
+
+  ngAfterViewChecked(): void {
+    if (this.weeklySalesData) {
+      this.updateChartData(this.weeklySalesData);
+    }
   }
 
   loadWeeklySales(date: string): void {
     this.isLoading = true;
     this.petSalesService.getWeeklySales(date).subscribe(
       (response: any) => {
-        this.weeklySalesData = response; // API response with `series` and `categories`
-        this.updateChartData(); // Update the chart with the new data
+          this.weeklySalesData = response; // API response with `series` and `categories`
+          this.updateChartData(response);
         this.isLoading = false;
       },
       (error) => {
@@ -75,9 +86,18 @@ export class PetSalesComponent implements OnInit {
     );
   }
 
-  updateChartData(): void {
+  updateChartData(response : any): void {
+
+    if (!response || !response.series || !response.categories) return;
+
+    
+    if (this.chart) {
+      this.chart.destroy();
+    }
+    
     // Set the chart labels (dates)
-    this.lineChartData.labels = this.weeklySalesData.categories;
+    this.lineChartData = { labels: [], datasets: [] }; 
+    this.lineChartData.labels = response.categories;
 
     // Clear existing datasets
     this.lineChartData.datasets = [];
@@ -96,6 +116,8 @@ export class PetSalesComponent implements OnInit {
         fill: true
       });
     });
+
+
   }
 
   getRandomColor(): string {
@@ -107,10 +129,10 @@ export class PetSalesComponent implements OnInit {
     }
     return color;
   }
-
   onDateChange(date: string): void {
-    this.selectedDate = date;
-    this.loadWeeklySales(date);
-    this.loadDailySales(date);
-  }
+      this.selectedDate = date;
+      this.loadWeeklySales(date);
+      this.loadDailySales(date);
+    }
+  
 }
