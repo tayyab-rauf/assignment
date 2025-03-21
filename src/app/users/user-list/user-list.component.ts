@@ -99,8 +99,8 @@ export class UsersListComponent implements OnInit {
       if (result) {
         this.userService.deleteUser(user.id)
           .subscribe({
-            next: () => {
-              this.showSuccessMessage('User deleted successfully');
+            next: (response : any) => {
+              this.showSuccessMessage(response.message);
               this.loadUsers();
             },
             error: (error : any) => {

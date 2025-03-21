@@ -33,8 +33,6 @@ export class AttractionsService {
   }
 
   deleteAttraction(id: number): Observable<{ success: boolean }> {
-    return this.http.delete<{ success: boolean }>(`${this.API_URL}/delete`, {
-      body: { id }
-    });
+    return this.http.delete<{ success: boolean }>(`${this.API_URL}/delete/${id}`);
   }
 }

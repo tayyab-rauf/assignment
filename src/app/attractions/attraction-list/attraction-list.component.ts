@@ -83,8 +83,8 @@ export class AttractionListComponent implements OnInit {
       if (result) {
         this.AttractionsService.deleteAttraction(attraction.id)
           .subscribe({
-            next: () => {
-              this.showSuccessMessage('Attraction deleted successfully');
+            next: (respo : any) => {
+              this.showSuccessMessage(respo.message);
               this.loadAttractions();
             },
             error: (error : any) => {
